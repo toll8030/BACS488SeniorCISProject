@@ -11,6 +11,8 @@ namespace TinyWebServer_v1._0
     class Server
     {
         private int port;
+        HttpListener listener = new HttpListener();
+        
         
 
 
