@@ -1,7 +1,7 @@
 # BACS488SeniorCISProject
->>> A Tiny Web Server <<< 
+>>> A Tiny Web Server
 
-Project Description 
+Project Description
 1.Overview of the Tiny Web Server (TW) 
   A Web server is a program that uses HTTP (Hypertext Transfer Protocol) to serve the files 
   that form Web pages to users, in response to their requests, which are sent to the server by 
@@ -28,7 +28,7 @@ Project Description
   The serve must be able to handle multiple simultaneous connections. 
   Each connection to the server must be handled by exactly one thread. 
   The server must have a GUI. 
-
+  
 5. Deliverables 
   A complete requirements document including system architecture, system requirements, syntax and semantics of messages, server data model, etc. and appendices as appropriate. 
   Design documents detailing all system models required by the course. 
