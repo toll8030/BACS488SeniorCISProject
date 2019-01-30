@@ -1,0 +1,92 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Net; //for IPEndPoint
+using System.Net.Sockets; //for UdpClient
+using System.Text;
+using System.Threading; //used for Threading
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+//fun fact: 127.0.0.1 is a loopback IPv4 address
+//NOTE: Exceptions come from the OS
+
+namespace Chat_Server
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+            CheckForIllegalCrossThreadCalls = false; //Turns off debugging and an error further down. NOT THE BEST PRATICE, BUT IT SUFFICES FOR THIS CLASS. 
+            //This will lower the security of your program, allowing others to access the main thread and senstive information (if sent)
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            //Make the thread an object
+            Thread RecievingThread = new Thread(reciever); //defines the function the thread needs to execute
+            RecievingThread.IsBackground = true; //makes the thread only run in the background
+            RecievingThread.IsBackground = true; //makes the thread only run in the background
+
+            //Start the thread
+            RecievingThread.Start();
+
+            //Confirm Server Started
+            MessageBox.Show("The server has started sucessfully.");
+
+            //Disable the button so users cannot relaunch the already running server
+            btnStart.Enabled = false;
+                    
+          
+        }
+
+        private void reciever() //create a method call reciever that has no arguments
+        {
+            //Open the socket
+            UdpClient udpClientSocket = new UdpClient(2020); //the port that it will hook up to. Port 2020 is used because it is recieving the socket
+
+            //Defining the variables and "storing" a couple things
+            Byte[] recievedBytes = new Byte[] { }; //stores the message recieved in "Recieved Bytes"
+            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0); //two arguments; IPAddress.Any is for any IP address, 0 is default. Has two structures, IP Address and Port
+            string recievedString; //creating a string variable called recievedString
+
+
+            while (true) //the program will not respond if this is NOT isolated
+            {
+                //Waiting to recieve the message- BLOCKING CALL
+                recievedBytes = udpClientSocket.Receive(ref RemoteIpEndPoint); //Recieve will block the execution of the current thread until the message is received
+                                                                               //when the messsge is recieved, it UNBLOCKS and goes to the next line of code
+
+                //Converting the message from bytes to string
+                recievedString = Encoding.ASCII.GetString(recievedBytes);
+
+                //DISPLAY the message
+                txtMessages.AppendText("IP: " + RemoteIpEndPoint.Address.ToString() + "  "); //shows the IP the message came from
+                txtMessages.AppendText("Port: " + RemoteIpEndPoint.Port.ToString() + "   "); //shows the port of the machine it came from
+                txtMessages.AppendText(recievedString); //use APPEND TEXT so it adds a line for each message the server recieve. Add a new line as well
+                //This has an execption error when running. We will "fix" it
+                //Look at PUBLIC FORM 1
+                            
+                txtMessages.AppendText(Environment.NewLine); //adds a new line into the textbox
+                txtMessages.Refresh(); //this will automatically refresh the textbox so it will display recent messages
+
+            }
+            // a thread is a SMALL "program" within a bigger program. It is in parallel to the program
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+    }
+}
