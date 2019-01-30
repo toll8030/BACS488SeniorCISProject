@@ -1,0 +1,9 @@
+//Python UDP Server
+import socket
+serverPort = 11000
+serverSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) //you have to manually bind the socket to the port
+serverSocket.bind(("", serverPort) //you have to manually bind the socket to the port
+print("The server is ready to recieve.")
+while 1:
+	message, clientAddress = serverSocket.recvfrom(2048) //2048 is just a buffer
+	print(message.decode())
